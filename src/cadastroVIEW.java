@@ -1,3 +1,7 @@
+
+import com.mysql.jdbc.Connection;
+import javax.swing.JOptionPane;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -140,18 +144,43 @@ public class cadastroVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_cadastroNomeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        ProdutosDTO produto = new ProdutosDTO();
+       ProdutosDTO produto = new ProdutosDTO();
+       ProdutosDAO c = new  ProdutosDAO();
+        
+       
+        
+
+        
         String nome = cadastroNome.getText();
         String valor = cadastroValor.getText();
-        String status = "A Venda";
+        
+        try {
+       
         produto.setNome(nome);
         produto.setValor(Integer.parseInt(valor));
-        produto.setStatus(status);
         
-        ProdutosDAO produtodao = new ProdutosDAO();
-        produtodao.cadastrarProduto(produto);
+        int resposta = c.cadastrarProduto(produto);
+        
+           if (resposta == 1) {
+            JOptionPane.showMessageDialog(null, "Dados incluídos com sucesso!");
+        } else if (resposta == 1062) {
+            JOptionPane.showMessageDialog(null, "Produto já foi cadastrado");
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao tentar inserir dados");
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Digite um valor válido!");
+    }
+         
+       
+        
+       
+         
+
+
         
     }//GEN-LAST:event_btnCadastrarActionPerformed
+
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
         listagemVIEW listagem = new listagemVIEW(); 
@@ -187,10 +216,12 @@ public class cadastroVIEW extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new cadastroVIEW().setVisible(true);
-            }
-        });
+        public void run() {
+            new cadastroVIEW().setVisible(true);
+        }
+        
+
+    });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
