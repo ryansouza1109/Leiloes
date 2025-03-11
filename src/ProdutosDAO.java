@@ -8,12 +8,14 @@
  * @author Adm
  */
 
+import com.mysql.cj.Query;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ProdutosDAO {
@@ -23,13 +25,21 @@ public class ProdutosDAO {
     ResultSet rs;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
     
+    
+    public ProdutosDAO() {
+        this.conn = new conectaDAO().conectar(); 
+        if (this.conn == null) {
+            System.out.println("Falha ao conectar ao banco de dados!"); 
+        }
+    }
+    
    public int cadastrarProduto (ProdutosDTO produto){
         
         conectaDAO conexao = new conectaDAO();
         Connection conn = conexao.conectar();
         
         if (conn == null) {
-            return -1; // Retorna -1 se a conexão falhar
+            return -1; 
         }
 
         try {
@@ -38,18 +48,54 @@ public class ProdutosDAO {
             st.setInt(2, produto.getValor());
             st.setString(3, produto.getStatus());
 
-            st.executeUpdate(); // Executa a inserção no banco
+            st.executeUpdate();
 
             st.close();
-            conn.close(); // Fecha a conexão após o uso
+            conn.close(); 
 
-            return 1; // Retorna 1 para indicar sucesso
+            return 1; 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao conectar: " + ex.getMessage());
-            return ex.getErrorCode(); // Retorna o código do erro SQL
+            return ex.getErrorCode(); 
         }
         
             }
+   
+    public List<ProdutosDTO> listar() {
+          
+          
+    
+          String sql =  "SELECT * FROM produtos";
+          List<ProdutosDTO> listaP = new ArrayList<>();
+          
+            try (PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            ProdutosDTO p = new ProdutosDTO();
+            p.setId(rs.getInt("id"));
+            p.setNome(rs.getString("nome"));
+            p.setValor(rs.getInt("valor"));
+            p.setStatus(rs.getString("status"));
+
+            listaP.add(p);
+            System.out.println("Produto carregado: " + p.getNome()); // Debug
+        }
+
+
+
+        return listaP;
+
+    } catch (Exception e) {
+       
+        return null;
+    }
+            }
+          
+
+     
+    
+    
         
         
     }

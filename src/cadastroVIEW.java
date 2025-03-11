@@ -158,6 +158,7 @@ public class cadastroVIEW extends javax.swing.JFrame {
        
         produto.setNome(nome);
         produto.setValor(Integer.parseInt(valor));
+        produto.setStatus("A Venda");
         
         int resposta = c.cadastrarProduto(produto);
         
