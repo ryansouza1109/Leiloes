@@ -79,7 +79,7 @@ public class ProdutosDAO {
             p.setStatus(rs.getString("status"));
 
             listaP.add(p);
-            System.out.println("Produto carregado: " + p.getNome()); // Debug
+           
         }
 
 
@@ -91,6 +91,29 @@ public class ProdutosDAO {
         return null;
     }
             }
+    
+  public boolean venderProduto(int produtoId) {
+        String sql = "UPDATE produtos SET status = ? WHERE id = ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "Vendido");
+            stmt.setInt(2, produtoId);
+            
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    
+}
+  
+     
+
+
+
+    
+
           
 
      

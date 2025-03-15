@@ -1,6 +1,7 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -139,10 +140,23 @@ public class listagemVIEW extends javax.swing.JFrame {
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
         String id = id_produto_venda.getText();
         
+       
+        
+      try {
+        int produtoId = Integer.parseInt(id);
         ProdutosDAO produtosdao = new ProdutosDAO();
         
-        //produtosdao.venderProduto(Integer.parseInt(id));
-        listarProdutos();
+        boolean sucesso = produtosdao.venderProduto(produtoId);
+        
+        if (sucesso) {
+            JOptionPane.showMessageDialog(this, "Produto vendido com sucesso!");
+            listarProdutos();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao vender o produto!");
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "ID inválido! Digite um número.");
+    }
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
@@ -207,7 +221,7 @@ public class listagemVIEW extends javax.swing.JFrame {
             ProdutosDAO produtosdao = new ProdutosDAO();
             
             DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
-            model.setNumRows(0);
+            model.setRowCount(0);
             
            
             List<ProdutosDTO> listagem = produtosdao.listar();
